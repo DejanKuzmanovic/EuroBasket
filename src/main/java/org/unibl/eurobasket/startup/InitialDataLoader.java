@@ -45,13 +45,8 @@ class InitialDataLoader implements ApplicationListener<ApplicationReadyEvent> {
     }
 
     private void createRoles() {
-        if (roleRepository.findByName(ADMIN_ROLE).isEmpty()) {
-            Role role = new Role(ADMIN_ROLE);
-            roleRepository.save(role);
-        }
-
-        if (roleRepository.findByName(MODERATOR_ROLE).isEmpty()) {
-            Role role = new Role(MODERATOR_ROLE);
+        if (roleRepository.findByName(USER_ROLE).isEmpty()) {
+            Role role = new Role(USER_ROLE);
             roleRepository.save(role);
         }
 
@@ -60,8 +55,13 @@ class InitialDataLoader implements ApplicationListener<ApplicationReadyEvent> {
             roleRepository.save(role);
         }
 
-        if (roleRepository.findByName(USER_ROLE).isEmpty()) {
-            Role role = new Role(USER_ROLE);
+        if (roleRepository.findByName(MODERATOR_ROLE).isEmpty()) {
+            Role role = new Role(MODERATOR_ROLE);
+            roleRepository.save(role);
+        }
+
+        if (roleRepository.findByName(ADMIN_ROLE).isEmpty()) {
+            Role role = new Role(ADMIN_ROLE);
             roleRepository.save(role);
         }
     }

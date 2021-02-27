@@ -5,20 +5,18 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.unibl.eurobasket.dto.UserDTO;
 import org.unibl.eurobasket.model.Role;
 import org.unibl.eurobasket.model.User;
 import org.unibl.eurobasket.repository.RoleRepository;
 import org.unibl.eurobasket.repository.UserRepository;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
 
     private static final String USER_ROLE = "ROLE_USER";
+    private static final String PREMIUM_USER_ROLE = "ROLE_PREMIUM_USER";
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -39,10 +37,24 @@ public class UserService {
         return createJsonResponse(currentUser);
     }
 
-    public JSONObject createUser(UserDTO userDTO) {
+    public JSONObject createUser(String username, String password) {
         Optional<Role> role = roleRepository.findByName(USER_ROLE);
-        if (role.isPresent() && userRepository.findByUsername(userDTO.getUsername()).isEmpty()) {
-            User user = new User(userDTO.getUsername(), new BCryptPasswordEncoder().encode(userDTO.getPassword()), new HashSet<>(Collections.singletonList(role.get())));
+        if (role.isPresent() && userRepository.findByUsername(username).isEmpty()) {
+            User user = new User(username, new BCryptPasswordEncoder().encode(password), new HashSet<>(Collections.singletonList(role.get())));
+            userRepository.save(user);
+            return createJsonResponse(user);
+        }
+        return null;
+    }
+
+    public JSONObject createUserWithRole(String username, String password, String roleName) {
+        Optional<Role> role = roleRepository.findByName(roleName);
+        if (role.isPresent() && userRepository.findByUsername(username).isEmpty()) {
+            List<Role> roles = new ArrayList<>();
+            for (int i = role.get().getId(); i > 0; i--) {
+                roles.add(roleRepository.getOne(i));
+            }
+            User user = new User(username, new BCryptPasswordEncoder().encode(password), new HashSet<>(roles));
             userRepository.save(user);
             return createJsonResponse(user);
         }
@@ -66,6 +78,18 @@ public class UserService {
             response.put("deleted user", createJsonResponse(user.get()));
             userRepository.delete(user.get());
             return response;
+        }
+        return null;
+    }
+
+    public JSONObject makePremium(User user) {
+        Optional<Role> role = roleRepository.findByName(PREMIUM_USER_ROLE);
+        if (role.isPresent() && !user.getRoles().contains(role.get())) {
+            Set<Role> roles = user.getRoles();
+            roles.add(role.get());
+            user.setRoles(roles);
+            userRepository.save(user);
+            return createJsonResponse(user);
         }
         return null;
     }
