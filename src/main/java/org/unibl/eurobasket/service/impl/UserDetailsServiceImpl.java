@@ -1,4 +1,4 @@
-package org.unibl.eurobasket.service;
+package org.unibl.eurobasket.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
