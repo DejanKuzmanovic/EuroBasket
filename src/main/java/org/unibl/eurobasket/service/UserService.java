@@ -24,17 +24,17 @@ public class UserService {
     public JSONObject getAllUsers() {
         JSONObject result = new JSONObject();
         JSONArray users = new JSONArray();
-        userRepository.findAll().forEach(user -> users.put(createJsonResponse(user)));
+        userRepository.findAll().forEach(user -> users.put(createUserJsonResponse(user)));
         result.put("users", users);
         return result;
     }
 
     public JSONObject getUserById(int id) {
-        return userRepository.findById(id).map(this::createJsonResponse).orElse(null);
+        return userRepository.findById(id).map(this::createUserJsonResponse).orElse(null);
     }
 
     public JSONObject getCurrentUser(User currentUser) {
-        return createJsonResponse(currentUser);
+        return createUserJsonResponse(currentUser);
     }
 
     public JSONObject createUser(String username, String password) {
@@ -42,7 +42,7 @@ public class UserService {
         if (role.isPresent() && userRepository.findByUsername(username).isEmpty()) {
             User user = new User(username, new BCryptPasswordEncoder().encode(password), new HashSet<>(Collections.singletonList(role.get())));
             userRepository.save(user);
-            return createJsonResponse(user);
+            return createUserJsonResponse(user);
         }
         return null;
     }
@@ -56,7 +56,7 @@ public class UserService {
             }
             User user = new User(username, new BCryptPasswordEncoder().encode(password), new HashSet<>(roles));
             userRepository.save(user);
-            return createJsonResponse(user);
+            return createUserJsonResponse(user);
         }
         return null;
     }
@@ -66,7 +66,7 @@ public class UserService {
             User user = currentUser.get();
             user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
             userRepository.save(user);
-            return createJsonResponse(user);
+            return createUserJsonResponse(user);
         }
         return null;
     }
@@ -75,7 +75,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             JSONObject response = new JSONObject();
-            response.put("deleted user", createJsonResponse(user.get()));
+            response.put("deleted user", createUserJsonResponse(user.get()));
             userRepository.delete(user.get());
             return response;
         }
@@ -89,12 +89,12 @@ public class UserService {
             roles.add(role.get());
             user.setRoles(roles);
             userRepository.save(user);
-            return createJsonResponse(user);
+            return createUserJsonResponse(user);
         }
         return null;
     }
 
-    private JSONObject createJsonResponse(User user) {
+    private JSONObject createUserJsonResponse(User user) {
         JSONObject response = new JSONObject();
         response.put("id", user.getId());
         response.put("username", user.getUsername());

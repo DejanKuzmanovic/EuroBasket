@@ -18,7 +18,7 @@ class InitialDataLoader implements ApplicationListener<ApplicationReadyEvent> {
     private static final String MODERATOR_ROLE = "ROLE_MODERATOR";
     private static final String PREMIUM_USER_ROLE = "ROLE_PREMIUM_USER";
     private static final String USER_ROLE = "ROLE_USER";
-    private static final List<String> countries = Arrays.asList("Španija", "Litvanija", "Francuska", "Srbija", "Grčka", "Italija", "Češka", "Rusija");
+    private static final List<String> countries = Arrays.asList("Spanija", "Litvanija", "Francuska", "Srbija", "Grcka", "Italija", "Ceska", "Rusija");
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -70,16 +70,16 @@ class InitialDataLoader implements ApplicationListener<ApplicationReadyEvent> {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
 
-        createGame("Španija", "Francuska", cal.getTime(), 0, 0, true);
+        createGame("Spanija", "Francuska", cal.getTime(), 0, 0, true);
 
         cal.add(Calendar.MINUTE, -10);
         createGame("Litvanija", "Srbija", cal.getTime(), 13, 10, true);
 
         cal.add(Calendar.MINUTE, -20);
-        createGame("Litvanija", "Srbija", cal.getTime(), 46, 62, true);
+        createGame("Grcka", "Italija", cal.getTime(), 46, 62, true);
 
         cal.add(Calendar.DAY_OF_MONTH, -1);
-        createGame("Češka", "Rusija", cal.getTime(), 78, 81, false);
+        createGame("Ceska", "Rusija", cal.getTime(), 78, 81, false);
     }
 
     private void createGame(String host, String guest, Date startTime, int hostPoints, int guestPoints, boolean isActive) {

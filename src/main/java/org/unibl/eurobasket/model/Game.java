@@ -44,6 +44,10 @@ public class Game {
         this.isActive = isActive;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public User getCreator() {
         return creator;
     }
