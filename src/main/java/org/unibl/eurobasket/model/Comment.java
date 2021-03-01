@@ -28,6 +28,10 @@ public class Comment {
         this.text = text;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public User getCreator() {
         return creator;
     }

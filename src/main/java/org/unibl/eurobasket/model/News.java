@@ -26,6 +26,10 @@ public class News {
         this.content = content;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public User getCreator() {
         return creator;
     }
